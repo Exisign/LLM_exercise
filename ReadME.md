@@ -42,6 +42,12 @@ L server.py             : 백엔드, fastapi
     ```
         # 윈도우
         .\llm_venv\Scripts\activate
+
+        # 위에서, 실행되지 않으면 아래 구문 적용
+        Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\llm_venv\Scripts\Activate.ps1
+
         # 맥
         source llm_venv\bin\activate
     ```
+- git 
