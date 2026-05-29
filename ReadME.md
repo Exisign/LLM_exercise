@@ -50,4 +50,50 @@ L server.py             : 백엔드, fastapi
         # 맥
         source llm_venv\bin\activate
     ```
-- git 
+- .gitignore 내용 세팅
+    - 가상환경 배제
+    ```  
+        ...
+        # 가상환경제외
+        llm_venv
+    ```
+- 패키지 설치
+    ```
+        (llm_venv)> pip install -r requirements.txt
+    ```
+    ```
+        # 백엔드 구성, bedrock 호출
+        fastapi
+        # fastapi 구동
+        uvicorn
+        # 프런트 구성
+        streamlit
+        # 프런트 -> 백엔드 요청
+        requests
+        # AWS SDK
+        boto3
+        # 랭체인 AWS 전용
+        langchain-aws
+        # 랭체인 코어 라이브러리
+        langchain-core
+        # 환경변수, .env 로드
+        python-dotenv
+    ```
+
+# 환경변수
+- .env
+    ```
+        AWS_REGION=us-east-1
+        MODEL_ID=google.gemma-3-27b-it
+        AWS_BEARER_TOKEN_BEDROCK=...
+    ```
+
+# 구동
+- 백엔드 : server.py
+    ```
+        uvicorn server:app --reload --port 8000
+    ```
+    - 테스트 
+        - http://127.0.0.1:8000/chat post 방식 요청
+        
+- 프런트
