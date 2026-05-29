@@ -14,5 +14,5 @@ app = FastAPI(title='식사 메뉴 추천 AI')
 # 3. API 구성
 @app.post('/chat')
 async def chat():
-    return "채팅 응답"
+    return "돈까스"
 
