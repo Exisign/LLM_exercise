@@ -68,7 +68,7 @@ if prompt := st.chat_input('현재 상황을 자세하게 입력하세요 ...'):
     # 화면 처리
     msg_holder.markdown( result )
 
-    # 대화 내용 추ㅏㄱ
+    # 대화 내용 추가
     st.session_state.messages.append({
         'role' : 'assistnat',
         'content' : result
