@@ -22,11 +22,11 @@ def add_prefix(state:CustomState):
     parameters : 
         - state : 공유 메모리, 전역 상태, 랭그래프에서 관리되는 상태
     '''
-    return { 'msg' : "헬로" + state['msg']}
+    return { 'msg' : "헬로 " + state['msg']}
 
 def add_surfix( state:CustomState):
     # 기존 상태 값에 특정 내용을 뒤에 추가
-    return { 'msg' : "헬로" + state['msg'] + " !!"}
+    return { 'msg' : state['msg'] + " !!"}
 
 # 4. 그래프 연결(구성)
 # 4-1. 그래프를 연결할 타겟 (기본 구성, 구조적 틀)
@@ -40,3 +40,11 @@ workflow.set_entry_point("T1") # 그래프 호출 진행되면 설정 노드가 
 workflow.add_edge('T1', 'T2') # T1 -> T2 규칙 지정(방향성
 # 4-5. 끝점 설정
 workflow.add_edge("T2", END) # T2가 끝나면 종료
+# 4-6. 컴파일 수행 => Make => 수행 가능한 형태로 완성
+app = workflow.compile()
+
+# 5. 데이터 주입(사용자의 질의 등 ...) -> 그래프 호출 -> 그래프를 순환하면서 요청에 대한 처리 수행
+#   데이터 형태 => 공유 메모리를 참조하여 구성
+#   데이터 => 노드(1) => 노드(2) => END(응답)
+res = app.invoke({"msg" : "랭그래프"})
+print( res )
