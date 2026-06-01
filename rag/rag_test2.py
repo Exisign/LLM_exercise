@@ -48,7 +48,7 @@ tokenizer = BedrockEmbeddings(model_id="amazon.titan-embed-text-v2:0",#"amazon.t
 vector_db = FAISS.from_documents(splites, tokenizer) # a메모리 기반, 디비를 메모리에 로드
 
 ##검색할 때 마다, 5와 7로만 이어지면. 속도가 굉장히 느림...
-# 6. 백터 비에 세팅 된 내용을 저장
+# 6. 백터 디비에 세팅 된 내용을 저장
 vector_db.save_local('hp-story')
 
 # 7. 검색 => 유사도 활용 
