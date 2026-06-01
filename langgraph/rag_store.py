@@ -14,12 +14,12 @@ import os
 load_dotenv()
 
 # 임베딩 모델 구성 => 토크나이저 획득
-tokenizer = BedrockEmbeddings( model_id = "amazon.titan_embed-text-v2:0", #"amazon.titan-embed-text-v1",
+tokenizer = BedrockEmbeddings( model_id = "amazon.titan-embed-text-v2:0", #"amazon.titan-embed-text-v1",
                               region_name = os.getenv('AWS_REGION')
                               )
 
 # 더미 데이터 구성 (LLM이 모르는 사내, 최신 데이터 등)
-
+### rag_test1.py 를 참조해 만들었으나. 모양이 좀 다름.
 data = [
     "가게명: 스파이시 웍, 메뉴: 마라탕, 꿔바로우, 특징: 아주 매움, 스트레스 풀림, 가격: 15000원",
     "가게명: 헬시 샐러드, 메뉴: 닭가슴살 샐러드, 샌드위치, 특징: 다이어트, 가벼움, 신선함, 가격: 9000원",
@@ -39,4 +39,4 @@ def search_stores(query:str, k: int=2):
 
 # 단위 테스트
 if __name__ == '__main__':
-    print('유사도 기반 검색', search_stores("가변운 식사"))
+    print('유사도 기반 검색', search_stores("가벼운 식사"))
