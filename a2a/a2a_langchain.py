@@ -50,11 +50,11 @@ def run_agent_collaboration( topic ):
     # 1. 목표 로그(프럼프트) 출력
     print(f'목표 : {topic}\n' + '='*50)
     # 2. 신입 개발자 초안 작성
-    print(f'\[신입 개발자] 코드 작성 중 ...')
+    print(f'\n[신입 개발자] 코드 작성 중 ...')
     draft_code = developer_agent.invoke({"request":topic})
     print(f'--\n{draft_code}')
     # 3. 전문 개발자 리뷰 작성 -> PASS가 나올 때 까지 반복 처리 가능 -> 반복문 사용
-    print(f'\[전문 개발자] 리뷰 검토 중 ...')
+    print(f'\n[전문 개발자] 리뷰 검토 중 ...')
     feedback = reviewer_agent.invoke({"code" : draft_code})
     print(f'--\n{feedback}')
     
