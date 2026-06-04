@@ -231,7 +231,7 @@ pydantic
 
 source llm_venv/Scripts/activate
 
-python install -r requirements.txt
+pip install -r requirements.txt
 
 
 ## 1단계 심플 구성
