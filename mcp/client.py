@@ -1,6 +1,9 @@
 '''
 MCP Client
 mCP Server 와 통신
+
+-- server를 VS Code 터미널로 하나 띄우고,
+-- client로 또 새로운 터미널에서 python .{현재경로}/client.py 등으로 실행.
 '''
 
 # 1. 모듈 가져오기
