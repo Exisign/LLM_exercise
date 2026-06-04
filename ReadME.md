@@ -192,3 +192,48 @@ L llm / __init__.py     : bedrock 통신 모듈
         - 피드백 루프
             - 일을 지시하고, 마무리 되는 것이 아니라, 리뷰 결과에 따라 행동 결정
             - 카운트 부여 -> 반복 회수를 제한 할 수 있음.
+
+# MCP (Model Context Protocol)
+- 개요
+    - AI 기업 앤프로픽 최초 개발 (2024.11)
+    - 오픈소스 프로토콜
+- 목적
+    - LLM 활용의 한계   
+        - 특정 데이터, 개발 도구(DB등) 연결할려면 개별적이 API 커스텀 구성하여 연동 코드 매번 작성, 라이브러리 구축필요
+        - 시간/비용 발생. 비효율적
+        - 이것을 표준화시켜서 (USB-C)와 같은 방식으로 한번만 구현하면 어떤 앱이든 플러그인 형태로 바로 연결되도록 고안
+    - 소유권
+        - 오픈소스로 개발 -> 2025.12 -> 리눅스재단 예하 -> 에이전틴 AI 재단 이관
+            - 참여 : 오픈AI, 구글 딥마인드, MS, 젯브레인,... 
+        - https://github.com/modelcontextprotocol
+    - 결론
+        - AI 어플리케이션의 도구(툴) 통합을 표준화, 간소화
+- 전체 아키텍처
+```
+# 비동기 처리 필수 !!! (async, await 등)
+사용자 -> 프럼프트 -> 랭체인/랭그래프 -> LLM 판단 -> 도구 사용 필요 -> 도구 목록 선택 -> 외부 도구(MCP 요청) -> Adapter
+(파이썬->JSON-RPC 2.0) -> MCP Server -> 비즈니스 로직 -> 응답 -> (JSON-RPC 2.0 -> 파이썬) -> MCP Client
+응답 -> LLM 응답 -> 다음 노드(단계) 진행 -> ...
+=> 성능 평가, 데이터 흐름, 트레킹, 관리 => 랭스미스
+```
+
+# 구현
+## 필요 패키지 설치
+langchain
+langgraph
+mcp=1.27.2
+botocore
+langsmith
+pydantic
+
+# 가상 환경 활성화 -> 설치
+./llm_venv/Scripts/activate
+
+source llm_venv/Scripts/activate
+
+python install -r requirements.txt
+
+
+## 1단계 심플 구성
+- 통신 집중
+    - MCP Client <-> MCP Server
