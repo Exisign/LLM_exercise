@@ -152,7 +152,7 @@ async def main():
     # BedrockMCPAgent 에이전트 생성
     agent = BedrockMCPAgent() # 기본값 생성
     try:    # MCP 서버 연동 -> I/O -> 예외 상황
-        agent.initialize()
+        await agent.initialize()
         # 사용자 입력 대기(프럼프트 입력 대기) -> 무한루프? 1회성?
         query = input('\n프럼프트 입력 : ').strip()
         # BedrockMCPAgent 에이전트의 `사용자 요청 처리` 함수 호출
