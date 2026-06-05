@@ -49,7 +49,7 @@ class MCPToolAdapter :
             #입력/출력 스트림 획득
             if isinstance(stdio_tuple, tuple):
                 self.read_stream, self.write_stream = stdio_tuple
-            else
+            else:
                 self.read_stream = stdio_tuple
                 self.write_stream = stdio_tuple
         except Exception as e:
