@@ -5,8 +5,7 @@
     - MCP를 이용하여 tool 사용
 '''
 import boto3
-from typing import Annotated, List, TypedDict
-import operator # 수정 요청한 회수 계산을 위한 처리 => 리액트의 리듀서와 유사한 기능 담당(참고)
+import asyncio
 import dotenv
 import os
 
@@ -14,9 +13,9 @@ from langchain_aws import ChatBedrock
 from langchain_core.messages import HumanMessage
 from langchain_core.tools import BaseTool
 from langgraph.graph import StateGraph, END, MessagesState
-from langgraph.prebuilt import ToolCallTransformer
+from langgraph.prebuilt import ToolNode
 
-from mcp_tools_adapter import MCPClient
+from mcp_tools_adapter import MCPToolAdapter
 
 # 2. 환경 변수 로드
 dotenv.load_dotenv()
@@ -32,13 +31,14 @@ class BedrockMCPAgent:
         self.tools = []     # MCP 서버에게 툴 목록 가져와서 저장
         self.graph  = None  # Langgraph workflow # LLM 도구 등 배치하는 그래프
         self.mcp_adapter = None # mcp_tools_adapter 내 객체와 연동 MCP 서버와 연동
-        pass
     
     # 초기화
     async def initialize( self ):
         # MCP Tool 로드
         print(f'MCP Server와 연결 중...')
         # mcp_tools_adapter.py와 작업 기술
+        self.mcp_adapter = MCPToolAdapter(self.server_script)
+        await self.mcp_adapter.initialize()
 
         # LLM 생성
         print(f'LLM 초기화 중 ...')
@@ -142,6 +142,11 @@ class BedrockMCPAgent:
             print( msg )
             return msg
 
+    # 메모라 정리(뒷정리)
+    async def cleanup(self):
+        '''뒷정리'''
+        if self.mcp_adpater:
+            await self.mcp_adpater.cleanup()
 # 4. 메인 함수
 async def main():
     # BedrockMCPAgent 에이전트 생성
@@ -155,7 +160,9 @@ async def main():
             await agent.process_query( query )
     except Exception as e:
         print('main() 오류 발생 {e}')
-    pass
+    finally:
+        # 뒷정리
+        await agent.cleanup() # MCP 서버와 연결된 세션, 스트림 모두 해제 (컨셉)
 
 # 5. 서비스 가동
 if __name__ == '__main__':

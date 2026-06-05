@@ -29,6 +29,7 @@ class MCPToolAdapter :
         pass
     
     # 초기화
+    ## 아래 코드를 mcp/client 코드와 비교하면 보면 좋을 것 같다.
     async def initialize( self ):
         '''MCP Server 연결, Tool 로드'''
         # MCP Server 접속 시, 필요한 정보 세팅
@@ -52,17 +53,29 @@ class MCPToolAdapter :
             else:
                 self.read_stream = stdio_tuple
                 self.write_stream = stdio_tuple
+
+            # 세션 획득(생성) => 툴을 가져올 수 있음
+            # JSON RPC 2.0 기준 상호 통신할 수 있는논리적인 상태(세션) 완성
+            self.session = ClientSession(self.read_stream, self.write_stream)
+            # 실제 활성화를 위해 직접 호출
+            await self.session.__aenter__()
+            # 세션 초기화
+            await self.session.initialize()
+            # MCP 서버에게 Tool 목록 요청
+            res = await self.session.list_tools()
+            self.mcp_tools = res.tools
+            print(f'MCP 서버로부터 { len(self.mcp_tools)} 개의 툴 로드 됨.')
+            return self
         except Exception as e:
             print('MCP 서버 연결 실패', e)
             raise
         pass
 async def cleanup(self):
     '''입력/출력 스트림, 세션 등 자원 해제 (개발자 관리)'''
-    # 세션이 존재하면   -> 세션 좋료
-    # 컨텍스트가 존재하면 -> 입력/출력 스트림 종료
+    # 세션이 존재하면   -> 세션 종료
     try:
-        if self._stdio_context:
-            await self._stdio_context.__aexit__(None, None, None)
+        if self.session:
+            await self.session.__aexit__(None, None, None)
     except Exception as e:
         print('입력/출력 스트림 종료 에러', e)
     pass
